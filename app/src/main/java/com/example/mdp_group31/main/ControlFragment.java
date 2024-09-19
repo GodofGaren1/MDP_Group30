@@ -165,6 +165,7 @@ public class ControlFragment extends Fragment {
                 }
                 // refreshes the UI displayed coordinate of robot
                 this.mainActivity.refreshCoordinate();
+                this.mainActivity.sendMessage("forward");
             }
             else
                 this.showToast("Please place robot on map to begin");
@@ -190,6 +191,7 @@ public class ControlFragment extends Fragment {
                 }
 
                 this.mainActivity.refreshCoordinate();
+                this.mainActivity.sendMessage("right");
             }
             else
                 this.showToast("Please place robot on map to begin");
@@ -214,6 +216,7 @@ public class ControlFragment extends Fragment {
                         break;
                 }
                 this.mainActivity.refreshCoordinate();
+                this.mainActivity.sendMessage("back");
             }
             else {
                 this.showToast("Please place robot on map to begin");
@@ -239,6 +242,7 @@ public class ControlFragment extends Fragment {
                         break;
                 }
                 this.mainActivity.refreshCoordinate();
+                this.mainActivity.sendMessage("left");
             }
             else
                 this.showToast("Please place robot on map to begin");
