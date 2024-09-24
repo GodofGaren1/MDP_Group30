@@ -61,7 +61,7 @@
                 android:orientation="horizontal">
                 <view
                     android:id="@+id/mapView"
-                    class="com.example.mdp_group31.main.GridMap"
+                    class="com.example.mdp_group30.main.GridMap"
                     android:layout_width="match_parent"
                     android:layout_height="430dp" />
             </LinearLayout>

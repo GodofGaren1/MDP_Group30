@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/splash_screen"
+        android:src="@drawable/image5"
         android:scaleType="centerCrop"/>
 
 

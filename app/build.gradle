@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mdp_group31'
+    namespace 'com.example.mdp_group30'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.mdp_group31"
+        applicationId "com.example.mdp_group30"
         minSdk 24
         targetSdk 33
         versionCode 1

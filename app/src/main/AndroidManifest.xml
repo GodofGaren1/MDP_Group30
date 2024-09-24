@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.example.mdp_group31">
+    package="com.example.mdp_group30">
 
     <dist:module dist:instant="true" />
 
@@ -27,13 +27,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/cone"
+        android:icon="@drawable/picture6"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/cone"
+        android:roundIcon="@drawable/picture6"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.mdp_group31.SplashScreen"
+            android:name="com.example.mdp_group30.SplashScreen"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -43,13 +44,14 @@
         </activity>
 
         <activity
-            android:name="com.example.mdp_group31.MainActivity"
+            android:name="com.example.mdp_group30.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
         </activity>
-        <activity android:name="com.example.mdp_group31.main.BluetoothPopUp"/>
+        <activity android:name="com.example.mdp_group30.main.BluetoothPopUp"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
