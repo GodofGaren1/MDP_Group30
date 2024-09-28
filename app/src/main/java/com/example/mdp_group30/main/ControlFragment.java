@@ -16,7 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.mdp_group30.MainActivity;
 import com.example.mdp_group30.R;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * ControlFragment is a Fragment class that displays the control buttons and timers for the robot in the
@@ -94,6 +99,156 @@ public class ControlFragment extends Fragment {
         }
     };
 
+//    public List<List<String>> splitStringToList(String input) {
+//        // Step 1: Split by '|' but exclude empty strings
+//        List<List<String>> obstacleList = new ArrayList<>();
+//        String[] parts = input.split("|");
+//
+//        // Step 2: Process each part
+//        for (String part : parts) {
+//            if (!part.isEmpty()) { // Avoid empty parts caused by leading and trailing '|'
+//                // Step 3: Split the part by ',' to get individual values
+//                String[] values = part.split(",");
+//                List<String> obstacle = new ArrayList<>();
+//                for (String value : values) {
+//                    obstacle.add(value);
+//                }
+//                // Add to the outer list
+//                obstacleList.add(obstacle);
+//            }
+//        }
+//
+//        return obstacleList;
+//    }
+public List<List<String>> splitStringToList(String input) {
+    // Step 1: Split by '|' but exclude empty strings
+    List<List<String>> obstacleList = new ArrayList<>();
+    String[] parts = input.split("\\|");
+
+    // Step 2: Process each part
+    for (String part : parts) {
+        if (!part.isEmpty()) { // Avoid empty parts caused by leading and trailing '|'
+            // Log the part being processed
+            Log.d(TAG, "Processing part: " + part);
+
+            // Step 3: Split the part by ',' to get individual values
+            String[] values = part.split(",");
+
+            // Create a new obstacle list
+            List<String> obstacle = new ArrayList<>();
+
+            // Log the values being added to the obstacle
+            for (String value : values) {
+                Log.d(TAG, "Adding value: " + value);
+                obstacle.add(value);
+            }
+
+            // Add to the outer list
+            obstacleList.add(obstacle);
+        }
+    }
+
+    Log.d(TAG, "Final obstacle list: " + obstacleList);
+
+    return obstacleList;
+}
+
+    public void sendStartMessage(String cat, String value){
+        JSONObject messageObject = new JSONObject();
+
+        try {
+            // Set the "cat" value
+            messageObject.put("cat", cat);
+            messageObject.put("value", value);
+            String messageString = messageObject.toString();
+
+            this.mainActivity.sendMessage(messageString);
+        }
+         catch (Exception e) {
+            e.printStackTrace(); // Handle exception if any
+        }
+    }
+    public void printObstacleList(List<List<String>> obstacleList) {
+        String TAG = "ObstacleListDebug"; // Log tag to filter in Logcat
+
+        // Check if the list is not empty
+        if (obstacleList.isEmpty()) {
+            Log.d(TAG, "Obstacle list is empty");
+            return;
+        }
+
+        // Iterate over each sublist (obstacle)
+        for (int i = 0; i < obstacleList.size(); i++) {
+            List<String> obstacle = obstacleList.get(i);
+            Log.d(TAG, "Obstacle " + i + ": " + obstacle);
+        }
+    }
+
+    public void sendObstacleMessage(String cat, List<List<String>> obstacleList) {
+        try {
+            // Create JSON object for sending
+            JSONObject messageObject = new JSONObject();
+
+            // Set the "cat" value
+            messageObject.put("cat", cat);
+
+            // Create the value object containing obstacles and mode
+            JSONObject valueObject = new JSONObject();
+
+            // Create an array of obstacles
+            JSONArray obstaclesArray = new JSONArray();
+
+            //for loop
+            printObstacleList(obstacleList);
+            int length = obstacleList.size();
+            for (int i = 0; i < length; i++) {
+                if (obstacleList.get(i).size() > 1){
+                    int temp = 0;
+                    switch(obstacleList.get(i).get(3)){
+                        case "N":
+                            temp = 0;
+                            break;
+                        case "S":
+                            temp = 1;
+                            break;
+                        case "E":
+                            temp = 2;
+                            break;
+                        case "W":
+                            temp = 3;
+                            break;
+                        default:
+                            break;
+                    }
+                    JSONObject obstacle1 = new JSONObject();
+                    obstacle1.put("x", Integer.parseInt(obstacleList.get(i).get(0)));
+                    obstacle1.put("y", Integer.parseInt(obstacleList.get(i).get(1)));
+                    obstacle1.put("id", Integer.parseInt(obstacleList.get(i).get(3)));
+                    obstacle1.put("d", (int) temp);
+                    obstaclesArray.put(obstacle1);
+                }
+                else{
+                    Log.e("Error", "Invalid obstacle data at index " + i);
+                }
+            }
+
+            // Put obstacles and mode into the value object
+            valueObject.put("obstacles", obstaclesArray);
+            valueObject.put("mode", "0");
+
+            // Add the value object to the main message
+            messageObject.put("value", valueObject);
+
+            // Convert the JSON object to a string
+            String messageString = messageObject.toString();
+
+            // Send the message
+            this.mainActivity.sendMessage(messageString);
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exception if any
+        }
+    }
     /**
      * Initializes the fragment.
      *
@@ -260,8 +415,11 @@ public class ControlFragment extends Fragment {
                 this.mainActivity.imgRecTimerFlag = false;
                 this.showToast("Image Recognition Started!!");
                 String getObsPos = this.gridMap.getAllObstacles();
-                getObsPos = "OBS|" + getObsPos;
-                this.mainActivity.sendMessage(getObsPos);
+                List<List<String>> obstacleList = splitStringToList(getObsPos);
+//                getObsPos = "OBS|" + getObsPos;
+//                this.mainActivity.sendMessage(getObsPos);
+//                this.mainActivity.sendMessage("{"cat": "obstacles", "value": {"obstacles": [{"x": 5, "y": 10, "id": 1, "d": 2}, {"x": 10, "y": 15, "id": 1, "d": 3}], "mode": "0"}}");
+                sendObstacleMessage("obstacles", obstacleList);
                 this.robotStatusText.setText(R.string.img_rec_start);
                 this.imgRecTime = System.currentTimeMillis();
                 timerHandler.postDelayed(imgRecTimer, 0);
@@ -278,7 +436,9 @@ public class ControlFragment extends Fragment {
             // changed from START to STOP (i.e., challenge started)
             else if (fastestCarBtn.getText().equals("STOP")) {
                 this.showToast("Fastest Car started!");
-                this.mainActivity.sendMessage("STM|Start");
+//                this.mainActivity.sendMessage("STM|Start");
+                sendStartMessage("control", "start");
+
                 this.mainActivity.fastestCarTimerFlag = false;
                 this.robotStatusText.setText(R.string.fastest_car_start);
                 this.fastestCarTime = System.currentTimeMillis();

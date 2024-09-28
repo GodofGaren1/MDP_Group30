@@ -6,9 +6,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/image5"
+        android:src="@mipmap/splash_screen"
         android:scaleType="centerCrop"/>
 
-
+    <!--        android:src="@drawable/image5"-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

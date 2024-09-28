@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
             BluetoothConnectionService.write(bytes);
         }
         this.printMessage(message);
+        Log.d("Tag", message);
     }
 
     /**
